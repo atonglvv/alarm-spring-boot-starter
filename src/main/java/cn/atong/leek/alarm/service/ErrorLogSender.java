@@ -92,8 +92,10 @@ public class ErrorLogSender {
                                 throw new RuntimeException("过滤报警消息-argsList");
                             }
                         }
-                        String errorLog = active + " 环境" + applicationName + "项目 TraceId: " + dto.getMdc() +
-                                " ip: " + dto.getIp() + " Exception: " + dto.getMessage() + " argsList: " + argsList;
+                        String errorLog = active + " 环境," + applicationName + "项目, TraceId: " + dto.getMdc() +
+                                " ip: " + dto.getIp() + "\n" +
+                                " Exception: " + dto.getMessage() + "\n" +
+                                " argsList: " + argsList;
                         log.info("ErrorLogSender send error log [{}]", errorLog);
                         dingDingAlarmService.sendAlarm(errorLog, alarmAddress);
                     }

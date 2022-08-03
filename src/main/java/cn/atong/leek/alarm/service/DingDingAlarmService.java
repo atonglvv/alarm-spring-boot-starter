@@ -2,6 +2,9 @@ package cn.atong.leek.alarm.service;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -10,18 +13,17 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * @program: alarm-spring-boot-starter
- * @description: 企业微信机器人 WebHook
+ * @description:
  * @author: atong
- * @create: 2022-08-02 16:08
+ * @create: 2022-08-03 11:09
  */
 @Slf4j
-public class CompanyWeChatAlarmService {
-
+public class DingDingAlarmService {
     private static final Integer CONNECTIONTIMEOUT = 10000;
     private static final Integer READTIMEOUT = 10000;
     private final RestTemplate restTemplate;
 
-    public CompanyWeChatAlarmService() {
+    public DingDingAlarmService() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(CONNECTIONTIMEOUT);
         factory.setReadTimeout(READTIMEOUT);
@@ -41,12 +43,17 @@ public class CompanyWeChatAlarmService {
             contentJson.put("content", message);
             jsonObject.put("text", contentJson);
             String alarmMessage = jsonObject.toJSONString();
-            String result = restTemplate.postForObject(alarmAddress, alarmMessage, String.class);
-            log.info("alarm call wechat roobat response info [{}]", result);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> formEntity = new HttpEntity<String>(alarmMessage, headers);
+
+            String result = restTemplate.postForObject(alarmAddress, formEntity, String.class);
+            log.info("alarm call dingding roobat response info [{}]", result);
             JSONObject resultObject = JSONObject.parseObject(result);
             Integer errcode = resultObject.getInteger("errcode");
             if (errcode != 0 && errcode != 45009) {
-                log.warn("alarm call wechat roobat error [{}]", result);
+                log.warn("alarm call dingding roobat error [{}]", result);
             }
         } catch (Exception e) {
             log.warn("web alarm job error:", e);

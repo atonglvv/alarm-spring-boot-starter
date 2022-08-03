@@ -13,8 +13,7 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @program: alarm-spring-boot-starter
@@ -24,6 +23,7 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 public class ErrorLogSender {
+
     @Value("${alarmAddress:null}")
     private String alarmAddress;
     @Value("${spring.profiles.active}")
@@ -32,12 +32,17 @@ public class ErrorLogSender {
     private String applicationName;
     @Autowired
     private ApplicationContext applicationContext;
-    // todo ConcurrentHashSet
-    private Set<String> exclusionPackageSet = new HashSet<>();
-    private Set<String> exclusionStringSet = new HashSet();
-    private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+    /** todo ConcurrentHashSet */
+    private final Set<String> exclusionPackageSet = new HashSet<>();
+    private final Set<String> exclusionStringSet = new HashSet<>();
+
+    private final ThreadPoolExecutor singleThreadExecutor = new ThreadPoolExecutor(1, 1,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
     @Autowired
     private CompanyWeChatAlarmService companyWeChatAlarmService;
+    @Autowired
+    private DingDingAlarmService dingDingAlarmService;
 
     public boolean addExclusionStringSet(String exclusionString) {
         return this.exclusionStringSet.add(exclusionString);
@@ -65,6 +70,7 @@ public class ErrorLogSender {
         }
 
         singleThreadExecutor.execute(() -> {
+            // noinspection InfiniteLoopStatement
             while(true) {
                 try {
                     ErrorLogDto dto = LogContext.logBlockingQueue.take();
@@ -86,9 +92,10 @@ public class ErrorLogSender {
                                 throw new RuntimeException("过滤报警消息-argsList");
                             }
                         }
-                        String errorLog = active + " 环境" + applicationName + "项目 TraceId: " + dto.getMdc() + " ip: " + dto.getIp() + " Exception: " + dto.getMessage() + " argsList: " + argsList;
+                        String errorLog = active + " 环境" + applicationName + "项目 TraceId: " + dto.getMdc() +
+                                " ip: " + dto.getIp() + " Exception: " + dto.getMessage() + " argsList: " + argsList;
                         log.info("ErrorLogSender send error log [{}]", errorLog);
-                        companyWeChatAlarmService.sendAlarm(errorLog, alarmAddress);
+                        dingDingAlarmService.sendAlarm(errorLog, alarmAddress);
                     }
                 } catch (Exception e) {
                     log.info(e.getMessage());

@@ -1,6 +1,7 @@
 package cn.atong.leek.alarm.config;
 
 import cn.atong.leek.alarm.service.CompanyWeChatAlarmService;
+import cn.atong.leek.alarm.service.DingDingAlarmService;
 import cn.atong.leek.alarm.service.ErrorLogSender;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +16,17 @@ import org.springframework.context.annotation.Configuration;
 public class ErrorLogConfigure {
 
     @Bean
+    public ErrorLogSender errorLogSender() {
+        return new ErrorLogSender();
+    }
+
+    @Bean
     public CompanyWeChatAlarmService companyWeChatAlarmService() {
         return new CompanyWeChatAlarmService();
     }
 
     @Bean
-    public ErrorLogSender errorLogSender() {
-        return new ErrorLogSender();
+    public DingDingAlarmService dingDingAlarmService() {
+        return new DingDingAlarmService();
     }
 }

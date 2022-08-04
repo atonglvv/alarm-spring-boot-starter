@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 
+
 /**
  * @program: alarm-spring-boot-starter
  * @description:
@@ -18,14 +19,25 @@ import java.nio.charset.StandardCharsets;
  * @create: 2022-08-03 11:09
  */
 @Slf4j
-public class DingDingAlarmService {
+public class DingDingAlarmService implements AlarmStartegy {
 
+    private static final Integer CONNECTIONTIMEOUT = 10000;
+    private static final Integer READTIMEOUT = 10000;
     private final RestTemplate restTemplate;
 
     public DingDingAlarmService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    public DingDingAlarmService() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(CONNECTIONTIMEOUT);
+        factory.setReadTimeout(READTIMEOUT);
+        restTemplate = new RestTemplate(factory);
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    }
+
+    @Override
     public void sendAlarm(String message, String alarmAddress) {
         try {
             JSONObject jsonObject = new JSONObject();

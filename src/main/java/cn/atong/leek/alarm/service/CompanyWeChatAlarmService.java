@@ -15,14 +15,25 @@ import java.nio.charset.StandardCharsets;
  * @create: 2022-08-02 16:08
  */
 @Slf4j
-public class CompanyWeChatAlarmService {
+public class CompanyWeChatAlarmService implements AlarmStartegy {
 
+    private static final Integer CONNECTIONTIMEOUT = 10000;
+    private static final Integer READTIMEOUT = 10000;
     private final RestTemplate restTemplate;
 
     public CompanyWeChatAlarmService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    public CompanyWeChatAlarmService() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(CONNECTIONTIMEOUT);
+        factory.setReadTimeout(READTIMEOUT);
+        restTemplate = new RestTemplate(factory);
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    }
+
+    @Override
     public void sendAlarm(String message, String alarmAddress) {
         try {
             JSONObject jsonObject = new JSONObject();

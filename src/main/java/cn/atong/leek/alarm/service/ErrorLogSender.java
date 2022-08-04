@@ -2,6 +2,7 @@ package cn.atong.leek.alarm.service;
 
 import cn.atong.leek.alarm.context.LogContext;
 import cn.atong.leek.alarm.dto.ErrorLogDto;
+import cn.atong.leek.alarm.factory.AlarmFactory;
 import cn.atong.leek.alarm.filter.ErrorLogFilterInterface;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,10 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: alarm-spring-boot-starter
@@ -24,8 +28,11 @@ import java.util.concurrent.*;
 @Slf4j
 public class ErrorLogSender {
 
-    @Value("${alarmAddress:null}")
+    @Value("${alarm.address:null}")
     private String alarmAddress;
+    /** 报警介质 钉钉 企信 */
+    @Value("${alarm.mode:dingding}")
+    private String alarmMode;
     @Value("${spring.profiles.active}")
     private String active;
     @Value("${spring.application.name}")
@@ -97,7 +104,8 @@ public class ErrorLogSender {
                                 " Exception: " + dto.getMessage() + "\n" +
                                 " argsList: " + argsList;
                         log.info("ErrorLogSender send error log [{}]", errorLog);
-                        dingDingAlarmService.sendAlarm(errorLog, alarmAddress);
+                        AlarmStartegy strategy = AlarmFactory.getStrategy(alarmMode);
+                        strategy.sendAlarm(errorLog, alarmAddress);
                     }
                 } catch (Exception e) {
                     log.info(e.getMessage());

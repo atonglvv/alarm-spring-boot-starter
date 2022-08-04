@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.atong.leek.alarm.config.ErrorLogConfigure
+cn.atong.leek.alarm.config.AlarmConfigure

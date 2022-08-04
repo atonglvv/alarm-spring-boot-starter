@@ -17,16 +17,10 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class CompanyWeChatAlarmService {
 
-    private static final Integer CONNECTIONTIMEOUT = 10000;
-    private static final Integer READTIMEOUT = 10000;
     private final RestTemplate restTemplate;
 
-    public CompanyWeChatAlarmService() {
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(CONNECTIONTIMEOUT);
-        factory.setReadTimeout(READTIMEOUT);
-        restTemplate = new RestTemplate(factory);
-        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    public CompanyWeChatAlarmService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public void sendAlarm(String message, String alarmAddress) {

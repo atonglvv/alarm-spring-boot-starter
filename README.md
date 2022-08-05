@@ -17,6 +17,7 @@ JDK compatibility:  1.8
 ```yaml
 alarm:
   address: [dingding or compony-wechat reboot webHook]
+  mode: [dingding/companyWeChat; default:dingding]
 spring:
   application:
     name: [your app name]

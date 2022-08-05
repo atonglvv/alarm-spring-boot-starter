@@ -9,7 +9,7 @@ import java.util.Set;
  * @author: atong
  * @create: 2022-08-02 15:06
  */
-public interface ErrorLogFilterInterface {
+public interface AlarmFilterInterface {
 
     default Set<String> exclusionPackage() {
         return new HashSet();

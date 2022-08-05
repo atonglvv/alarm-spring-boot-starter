@@ -26,15 +26,18 @@ spring:
 ```
 #### logback
 指定 logback appender 的 Filter，如下：
+
 ```xml
     <!--控制日志输出位置的Appender-->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="cn.atong.leek.alarm.filter.ErrorLogFilter"/>
-        <!--日志消息格式的配置-->
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %C.%M:%L - [traceId:%X{traceId}] [businessId:%X{businessId}] %m%n </pattern>
-        </encoder>
-    </appender>
+<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="cn.atong.leek.alarm.filter.AlarmFilter"/>
+    <!--日志消息格式的配置-->
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %C.%M:%L - [traceId:%X{traceId}] [businessId:%X{businessId}]
+            %m%n
+        </pattern>
+    </encoder>
+</appender>
 ```
 
 ## FAQs

@@ -9,7 +9,7 @@ import lombok.Data;
  * @create: 2022-08-02 11:33
  */
 @Data
-public class ErrorLogDto {
+public class AlarmDto {
     private String message;
     private String mdc;
     private String ip;

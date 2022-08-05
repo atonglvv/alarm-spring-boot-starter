@@ -7,8 +7,8 @@ import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
-import cn.atong.leek.alarm.context.LogContext;
-import cn.atong.leek.alarm.dto.ErrorLogDto;
+import cn.atong.leek.alarm.context.AlarmContext;
+import cn.atong.leek.alarm.dto.AlarmDto;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
@@ -22,7 +22,7 @@ import java.net.InetAddress;
  * @create: 2022-08-02 11:19
  */
 @Slf4j
-public class ErrorLogFilter extends Filter<ILoggingEvent> {
+public class AlarmFilter extends Filter<ILoggingEvent> {
 
     private static String ip = "";
 
@@ -60,7 +60,7 @@ public class ErrorLogFilter extends Filter<ILoggingEvent> {
                 if (errorMessage.length() == 0) {
                     return FilterReply.ACCEPT;
                 }
-                ErrorLogDto dto = new ErrorLogDto();
+                AlarmDto dto = new AlarmDto();
                 dto.setMessage(errorMessage);
                 dto.setMdc(MDC.get("traceId"));
                 if (ip == null || ip.length() == 0) {
@@ -72,13 +72,13 @@ public class ErrorLogFilter extends Filter<ILoggingEvent> {
                 dto.setArgumentArray(argumentArray);
                 String loggerName = event.getLoggerName();
                 dto.setPackageString(loggerName);
-                LogContext.logBlockingQueue.offer(dto);
+                AlarmContext.logBlockingQueue.offer(dto);
             }
         } catch (Exception e) {
             try {
-                ErrorLogDto dto = new ErrorLogDto();
+                AlarmDto dto = new AlarmDto();
                 dto.setMessage("ErrorLogFilter error:" + e.getMessage());
-                LogContext.logBlockingQueue.offer(dto);
+                AlarmContext.logBlockingQueue.offer(dto);
             } catch (Exception exception) {
                 log.info("ErrorLogFilter exception");
             }

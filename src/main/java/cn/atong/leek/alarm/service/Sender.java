@@ -1,9 +1,9 @@
 package cn.atong.leek.alarm.service;
 
-import cn.atong.leek.alarm.context.LogContext;
-import cn.atong.leek.alarm.dto.ErrorLogDto;
+import cn.atong.leek.alarm.context.AlarmContext;
+import cn.atong.leek.alarm.dto.AlarmDto;
 import cn.atong.leek.alarm.factory.AlarmFactory;
-import cn.atong.leek.alarm.filter.ErrorLogFilterInterface;
+import cn.atong.leek.alarm.filter.AlarmFilterInterface;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @create: 2022-08-02 14:56
  */
 @Slf4j
-public class ErrorLogSender {
+public class Sender {
 
     @Value("${alarm.address:null}")
     private String alarmAddress;
@@ -46,10 +46,6 @@ public class ErrorLogSender {
     private final ThreadPoolExecutor singleThreadExecutor = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(), Executors.defaultThreadFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
-    @Autowired
-    private CompanyWeChatAlarmService companyWeChatAlarmService;
-    @Autowired
-    private DingDingAlarmService dingDingAlarmService;
 
     public boolean addExclusionStringSet(String exclusionString) {
         return this.exclusionStringSet.add(exclusionString);
@@ -62,7 +58,7 @@ public class ErrorLogSender {
     @PostConstruct
     public void init() {
         try {
-            ErrorLogFilterInterface bean = applicationContext.getBean(ErrorLogFilterInterface.class);
+            AlarmFilterInterface bean = applicationContext.getBean(AlarmFilterInterface.class);
             if (bean.exclusionPackage() != null) {
                 exclusionPackageSet.addAll(bean.exclusionPackage());
             }
@@ -80,7 +76,7 @@ public class ErrorLogSender {
             // noinspection InfiniteLoopStatement
             while(true) {
                 try {
-                    ErrorLogDto dto = LogContext.logBlockingQueue.take();
+                    AlarmDto dto = AlarmContext.logBlockingQueue.take();
                     if (!"null".equals(alarmAddress)) {
                         String packageString = dto.getPackageString();
                         for (String exclusionPackage : exclusionPackageSet) {

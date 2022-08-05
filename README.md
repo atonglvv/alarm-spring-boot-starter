@@ -1,6 +1,6 @@
 # alarm-spring-boot-starter
 
-[Quick start]() | [FAQs]() | [Report an issue]()
+[Quick start](https://gitcode.net/u011552171/alarm-spring-boot-starter#quick-start) | [FAQs](https://gitcode.net/u011552171/alarm-spring-boot-starter#faqs) | [Report an issue](https://gitcode.net/u011552171/alarm-spring-boot-starter/-/issues/new)
 
 alarm-spring-boot-starter will help you to View error logs from compony-wechat or DingDing.  
 

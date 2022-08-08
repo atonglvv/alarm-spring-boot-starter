@@ -44,8 +44,6 @@ public class AlarmFilter extends Filter<ILoggingEvent> {
                     }
                     // 行数
                     int lineNum = 0;
-                    int stackTraceElementProxyLength = stackTraceElementProxy.length;
-
                     for (StackTraceElementProxy proxy : stackTraceElementProxy) {
                         if (lineNum >= 20) {
                             break;

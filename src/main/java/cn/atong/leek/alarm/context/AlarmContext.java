@@ -12,5 +12,5 @@ import java.util.concurrent.BlockingQueue;
  * @create: 2022-08-02 11:35
  */
 public class AlarmContext {
-    public static BlockingQueue<AlarmDto> logBlockingQueue = new ArrayBlockingQueue(1000);
+    public static BlockingQueue<AlarmDto> logBlockingQueue = new ArrayBlockingQueue<>(1000);
 }

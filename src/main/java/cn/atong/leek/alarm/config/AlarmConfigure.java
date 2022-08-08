@@ -33,7 +33,7 @@ public class AlarmConfigure {
     }
 
     @Bean
-    public Sender errorLogSender() {
+    public Sender sender() {
         return new Sender();
     }
 

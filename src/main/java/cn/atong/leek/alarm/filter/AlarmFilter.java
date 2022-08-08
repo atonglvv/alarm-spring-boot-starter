@@ -29,10 +29,12 @@ public class AlarmFilter extends Filter<ILoggingEvent> {
     @Override
     public FilterReply decide(ILoggingEvent event) {
         try {
+            // 只拦截 ERROR 级别的 log
             if (Level.ERROR.equals(event.getLevel())) {
                 IThrowableProxy iThrowableProxy = event.getThrowableProxy();
                 StringBuilder sb = new StringBuilder();
                 if (iThrowableProxy instanceof ThrowableProxy) {
+                    // Throwable 不止 error message, 还需要打印 throwableMsg...
                     ThrowableProxy throwableProxy = (ThrowableProxy)iThrowableProxy;
                     Throwable throwable = throwableProxy.getThrowable();
                     String throwableMsg = throwable.getMessage();
@@ -52,6 +54,7 @@ public class AlarmFilter extends Filter<ILoggingEvent> {
                         ++lineNum;
                     }
                 } else {
+                    // 项目中打印的 error log
                     sb.append(event.getMessage());
                 }
                 String errorMessage = sb.toString();

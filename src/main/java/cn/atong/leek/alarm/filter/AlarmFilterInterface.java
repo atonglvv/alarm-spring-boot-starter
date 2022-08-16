@@ -12,10 +12,14 @@ import java.util.Set;
 public interface AlarmFilterInterface {
 
     default Set<String> exclusionPackage() {
-        return new HashSet();
+        return new HashSet<>();
     }
 
     default Set<String> exclusionString() {
-        return new HashSet();
+        return new HashSet<>();
+    }
+
+    default Set<String> exclusionThrowable() {
+        return new HashSet<>();
     }
 }

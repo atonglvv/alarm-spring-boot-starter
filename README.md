@@ -39,7 +39,8 @@ spring:
     </encoder>
 </appender>
 ```
-
+## Version
+1.0.2   可过滤自定义业务异常
 ## FAQs
 
 ## Contact

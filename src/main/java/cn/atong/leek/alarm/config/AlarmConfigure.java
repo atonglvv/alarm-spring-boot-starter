@@ -1,5 +1,6 @@
 package cn.atong.leek.alarm.config;
 
+import cn.atong.leek.alarm.filter.AlarmFilter;
 import cn.atong.leek.alarm.service.CompanyWeChatAlarmService;
 import cn.atong.leek.alarm.service.DingDingAlarmService;
 import cn.atong.leek.alarm.service.Sender;
@@ -45,5 +46,10 @@ public class AlarmConfigure {
     @Bean
     public DingDingAlarmService dingDingAlarmService() {
         return new DingDingAlarmService(restTemplate());
+    }
+
+    @Bean
+    public AlarmFilter alarmFilter() {
+        return new AlarmFilter();
     }
 }

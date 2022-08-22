@@ -15,4 +15,5 @@ public class AlarmDto {
     private String ip;
     private Object[] argumentArray;
     private String packageString;
+    private String throwableClassName;
 }

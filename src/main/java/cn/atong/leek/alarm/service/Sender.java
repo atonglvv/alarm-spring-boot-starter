@@ -5,6 +5,9 @@ import cn.atong.leek.alarm.dto.AlarmDto;
 import cn.atong.leek.alarm.factory.AlarmFactory;
 import cn.atong.leek.alarm.filter.AlarmFilterInterface;
 import com.alibaba.fastjson.JSONObject;
+import com.ctrip.framework.apollo.build.ApolloInjector;
+import com.ctrip.framework.apollo.core.enums.Env;
+import com.ctrip.framework.apollo.util.ConfigUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +36,7 @@ public class Sender {
     /** 报警介质 钉钉 企信 */
     @Value("${alarm.mode:dingding}")
     private String alarmMode;
-    @Value("${spring.profiles.active}")
-    private String active;
-    @Value("${spring.application.name}")
+    @Value("${app.id}")
     private String applicationName;
     @Autowired
     private ApplicationContext applicationContext;
@@ -57,6 +58,7 @@ public class Sender {
 
     @PostConstruct
     public void init() {
+        Env apolloEnv = ApolloInjector.getInstance(ConfigUtil.class).getApolloEnv();
         try {
             AlarmFilterInterface bean = applicationContext.getBean(AlarmFilterInterface.class);
             if (bean.exclusionPackage() != null) {
@@ -95,7 +97,7 @@ public class Sender {
                                 throw new RuntimeException("过滤报警消息-argsList");
                             }
                         }
-                        String errorLog = active + " 环境," + applicationName + "项目, TraceId: " + dto.getMdc() +
+                        String errorLog = apolloEnv + " 环境," + applicationName + "项目, TraceId: " + dto.getMdc() +
                                 " ip: " + dto.getIp() + "\n" +
                                 " Exception: " + dto.getMessage() + "\n" +
                                 " argsList: " + argsList;

@@ -6,7 +6,7 @@
 
     <groupId>cn.atong.leek</groupId>
     <artifactId>alarm-spring-boot-starter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

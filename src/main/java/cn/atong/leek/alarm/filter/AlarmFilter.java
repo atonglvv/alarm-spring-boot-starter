@@ -30,7 +30,7 @@ import java.util.Set;
 public class AlarmFilter extends Filter<ILoggingEvent> {
 
     private static String ip = "";
-    private static final Set<String> exclusionThrowableSet = new HashSet<>();
+    private static final Set<String> EXCLUSION_THROWABLE_SET = new HashSet<>();
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -39,7 +39,7 @@ public class AlarmFilter extends Filter<ILoggingEvent> {
     public void init() {
         AlarmFilterInterface bean = applicationContext.getBean(AlarmFilterInterface.class);
         if (bean.exclusionThrowable() != null) {
-            exclusionThrowableSet.addAll(bean.exclusionThrowable());
+            EXCLUSION_THROWABLE_SET.addAll(bean.exclusionThrowable());
         }
     }
 
@@ -56,7 +56,7 @@ public class AlarmFilter extends Filter<ILoggingEvent> {
                     ThrowableProxy throwableProxy = (ThrowableProxy)iThrowableProxy;
                     Throwable throwable = throwableProxy.getThrowable();
                     String throwableClassName = throwable.getClass().getName();
-                    for (String exclusionThrowable : exclusionThrowableSet) {
+                    for (String exclusionThrowable : EXCLUSION_THROWABLE_SET) {
                         if (throwableClassName.contains(exclusionThrowable)) {
                             return FilterReply.ACCEPT;
                         }

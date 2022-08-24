@@ -23,6 +23,7 @@ public class DingDingAlarmService implements AlarmStartegy {
 
     private static final Integer CONNECTIONTIMEOUT = 10000;
     private static final Integer READTIMEOUT = 10000;
+    private static final Integer MESSAGE_LENGTH = 4500;
     private final RestTemplate restTemplate;
 
     public DingDingAlarmService(RestTemplate restTemplate) {
@@ -43,8 +44,8 @@ public class DingDingAlarmService implements AlarmStartegy {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("msgtype", "text");
             JSONObject contentJson = new JSONObject();
-            if (message.length() > 4500) {
-                message = message.substring(0, 4500);
+            if (message.length() > MESSAGE_LENGTH) {
+                message = message.substring(0, MESSAGE_LENGTH);
                 message = message + "@@@@@@@太长了，截断了";
             }
             contentJson.put("content", message);

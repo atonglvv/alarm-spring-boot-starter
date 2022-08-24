@@ -11,14 +11,26 @@ import java.util.Set;
  */
 public interface AlarmFilterInterface {
 
+    /**
+     * 排除包内的错误日志获取异常报警
+     * @return HashSet
+     */
     default Set<String> exclusionPackage() {
         return new HashSet<>();
     }
 
+    /**
+     * 排除包含某String的错误日志获取异常报警
+     * @return HashSet
+     */
     default Set<String> exclusionString() {
         return new HashSet<>();
     }
 
+    /**
+     * 排除Throwable的错误日志获取异常报警
+     * @return HashSet
+     */
     default Set<String> exclusionThrowable() {
         return new HashSet<>();
     }

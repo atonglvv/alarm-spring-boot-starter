@@ -11,6 +11,7 @@ import cn.atong.leek.alarm.context.AlarmContext;
 import cn.atong.leek.alarm.dto.AlarmDto;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -37,9 +38,15 @@ public class AlarmFilter extends Filter<ILoggingEvent> {
 
     @PostConstruct
     public void init() {
-        AlarmFilterInterface bean = applicationContext.getBean(AlarmFilterInterface.class);
-        if (bean.exclusionThrowable() != null) {
-            exclusionThrowableSet.addAll(bean.exclusionThrowable());
+        try{
+            AlarmFilterInterface bean = applicationContext.getBean(AlarmFilterInterface.class);
+            if (bean.exclusionThrowable() != null) {
+                exclusionThrowableSet.addAll(bean.exclusionThrowable());
+            }
+        } catch (BeansException e) {
+            log.info("init exclusion BeansException: {}", e.getMessage());
+        } catch (Exception e) {
+            log.info("init exclusion error: {}", e.getMessage());
         }
     }
 
